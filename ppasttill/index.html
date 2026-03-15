@@ -1,48 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>PASTILAN NI EMIK</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pastilan ni Emik 🍱</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍱</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-<header>
-<h1>PASTILAN NI EMIK</h1>
-</header>
+  <!-- ═══════════════════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════════════════ -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="nav-logo">🍱</span>
+      <div class="nav-titles">
+        <span class="nav-main">PASTILAN</span>
+        <span class="nav-sub">ni Emik</span>
+      </div>
+    </div>
+    <div class="nav-links">
+      <button class="nav-btn active" data-view="user" onclick="switchView('user')">🏠 Menu</button>
+      <button class="nav-btn" data-view="orders" onclick="switchView('orders')">📋 My Orders</button>
+    </div>
+    <button class="nav-toggle" onclick="toggleMobileNav()" aria-label="Toggle menu">☰</button>
+  </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <button onclick="switchView('user');closeMobileNav()">🏠 Menu</button>
+    <button onclick="switchView('orders');closeMobileNav()">📋 My Orders</button>
+    <a href="admin.html" onclick="closeMobileNav()">⚙️ Admin Panel</a>
+  </div>
 
-<h2>Food Menu</h2>
+  <!-- ═══════════════════════════════════════════════════
+       USER VIEW — MENU
+  ═══════════════════════════════════════════════════ -->
+  <div id="view-user" class="view active">
 
-<div id="products"></div>
+    <section class="hero">
+      <div class="hero-pattern"></div>
+      <div class="hero-content">
+        <p class="hero-badge">🇵🇭 Lutong Bahay · Sulit na Sulit</p>
+        <h1 class="hero-title">PASTILAN<br><span>NI EMIK</span></h1>
+        <p class="hero-desc">Masarap na pagkain, abot-kayang presyo.<br>Order na ngayon!</p>
+        <div class="hero-chips">
+          <span>🔥 Fresh Daily</span>
+          <span>💰 Budget-Friendly</span>
+          <span>🏠 Homemade</span>
+        </div>
+      </div>
+    </section>
 
-<div id="orderModal" class="modal">
-<div class="modalContent">
+    <div class="shop-toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search food..." oninput="renderProducts()" />
+      </div>
+      <div class="filter-btns">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">All</button>
+        <button class="filter-btn" data-filter="available" onclick="setFilter('available',this)">✅ Available</button>
+        <button class="filter-btn" data-filter="unavailable" onclick="setFilter('unavailable',this)">❌ Sold Out</button>
+      </div>
+    </div>
 
-<h3 id="orderProduct"></h3>
+    <section class="products-section">
+      <div class="products-grid" id="productsGrid"></div>
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <span>🍽️</span>
+        <p>No products found.</p>
+      </div>
+    </section>
 
-<input id="customerName" placeholder="Your Name">
+  </div><!-- end #view-user -->
 
-<input id="quantity" type="number" value="1" min="1">
 
-<div id="addonList"></div>
+  <!-- ═══════════════════════════════════════════════════
+       MY ORDERS VIEW
+  ═══════════════════════════════════════════════════ -->
+  <div id="view-orders" class="view">
+    <div class="page-header">
+      <h2>📋 My Orders</h2>
+      <p>Your recent orders from this device</p>
+    </div>
+    <div class="orders-list" id="myOrdersList"></div>
+  </div>
 
-<select id="payment">
-<option>Cash</option>
-<option>GCash</option>
-<option>Maya</option>
-<option>COD</option>
-</select>
 
-<h4>Total: ₱<span id="total">0</span></h4>
+  <!-- ═══════════════════════════════════════════════════
+       ORDER MODAL
+  ═══════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="orderModal" onclick="handleOverlayClick(event,'orderModal')">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
+      <div class="modal-header">
+        <div>
+          <h3 id="orderModalTitle">Place Your Order</h3>
+          <p class="modal-sub" id="orderProductSub">Product name</p>
+        </div>
+        <button class="modal-close" onclick="closeModal('orderModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="orderForm" onsubmit="submitOrder(event)">
 
-<button onclick="submitOrder()">Submit Order</button>
-<button onclick="closeModal()">Cancel</button>
+          <div class="order-product-bar">
+            <div class="order-product-img" id="orderProductImg"></div>
+            <div>
+              <div class="order-product-name" id="orderProductName">—</div>
+              <div class="order-product-price" id="orderProductPrice">₱0.00</div>
+            </div>
+          </div>
 
-</div>
-</div>
+          <div class="form-group">
+            <label class="form-label">Your Name <span class="req">*</span></label>
+            <input type="text" id="orderCustomerName" class="form-control" placeholder="e.g. Juan Dela Cruz" maxlength="60" required />
+          </div>
 
-<script src="script.js"></script>
+          <div class="form-group">
+            <label class="form-label">Quantity <span class="req">*</span></label>
+            <div class="qty-row">
+              <button type="button" class="qty-btn" onclick="changeQty(-1)">−</button>
+              <input type="number" id="orderQty" class="qty-input" value="1" min="1" max="50" oninput="updateOrderTotal()" />
+              <button type="button" class="qty-btn" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
 
+          <div class="form-group">
+            <label class="form-label">Add-ons / Side Dishes <span class="optional">(optional)</span></label>
+            <div class="addons-list" id="orderAddonsList"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Payment Method <span class="req">*</span></label>
+            <div class="payment-grid">
+              <label class="pay-opt"><input type="radio" name="payment" value="Cash" checked /><span>💵 Cash</span></label>
+              <label class="pay-opt"><input type="radio" name="payment" value="GCash" /><span>💙 GCash</span></label>
+              <label class="pay-opt"><input type="radio" name="payment" value="Maya" /><span>💜 Maya</span></label>
+              <label class="pay-opt"><input type="radio" name="payment" value="COD" /><span>📦 COD</span></label>
+            </div>
+          </div>
+
+          <div class="order-summary">
+            <div class="summary-title">📋 Order Summary</div>
+            <div class="summary-row"><span>Product Price</span><span id="sumBase">₱0.00</span></div>
+            <div class="summary-row"><span>Quantity</span><span id="sumQty">×1</span></div>
+            <div class="summary-row" id="sumAddonsRow"><span>Add-ons Total</span><span id="sumAddons">₱0.00</span></div>
+            <div class="summary-divider"></div>
+            <div class="summary-total"><span>Overall Total</span><span id="sumTotal">₱0.00</span></div>
+          </div>
+
+          <button type="submit" class="btn-submit">🚀 Place Order</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+  <footer class="footer">
+    <strong>PASTILAN NI EMIK</strong> &nbsp;·&nbsp; Lutong Bahay na Paboritong Pagkain &nbsp;·&nbsp; © <span id="footerYear"></span>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
