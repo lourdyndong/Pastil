@@ -7,18 +7,54 @@
 
 // ── Default Data ──────────────────────────────────────────────
 const DEFAULT_PRODUCTS = [
-  { id: 'p1', name: 'Pork Pastil',       price: 45,  available: true,  image: '', emoji: '🍱' },
-  { id: 'p2', name: 'Chicken Inasal',    price: 85,  available: true,  image: '', emoji: '🍗' },
-  { id: 'p3', name: 'Adobong Kangkong',  price: 35,  available: true,  image: '', emoji: '🥬' },
-  { id: 'p4', name: 'Sinangag Rice',     price: 25,  available: true,  image: '', emoji: '🍚' },
-  { id: 'p5', name: 'Lechon Kawali',     price: 120, available: true,  image: '', emoji: '🥩' },
-  { id: 'p6', name: 'Buko Juice',        price: 30,  available: true,  image: '', emoji: '🥥' },
+  {
+    id: 'p1',
+    name: 'Chicken Pastil with Egg',
+    price: 45,
+    available: true,
+    image: 'images/pastil-egg.png',
+    emoji: '🍱'
+  },
+  {
+    id: 'p2',
+    name: 'Chicken Pastil Skinless',
+    price: 45,
+    available: true,
+    image: 'images/pastil-skinless.png',
+    emoji: '🍱'
+  },
+  {
+    id: 'p3',
+    name: 'Chicken Pastil Spam',
+    price: 50,
+    available: true,
+    image: 'images/pastil-spam.png',
+    emoji: '🍱'
+  },
+  {
+    id: 'p4',
+    name: 'Chicken Pastil Canton',
+    price: 55,
+    available: true,
+    image: 'images/pastil-canton.png',
+    emoji: '🍱'
+  },
+  {
+    id: 'p5',
+    name: 'Larang',
+    price: 120,
+    available: true,
+    image: 'images/larang.png',
+    emoji: '🍲'
+  }
 ];
 
 const DEFAULT_ADDONS = [
   { id: 'a1', name: 'Extra Rice', price: 10 },
-  { id: 'a2', name: 'Egg',        price: 15 },
-  { id: 'a3', name: 'Cheese',     price: 12 },
+  { id: 'a2', name: 'Egg', price: 15 },
+  { id: 'a3', name: 'Skinless', price: 15 },
+  { id: 'a4', name: 'Spam', price: 20 },
+  { id: 'a5', name: 'Canton', price: 25 }
 ];
 
 // ── State ─────────────────────────────────────────────────────
