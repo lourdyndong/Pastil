@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PASTILAN NI EMIK</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+<h1>PASTILAN NI EMIK</h1>
+</header>
+
+<h2>Food Menu</h2>
+
+<div id="products"></div>
+
+<div id="orderModal" class="modal">
+<div class="modalContent">
+
+<h3 id="orderProduct"></h3>
+
+<input id="customerName" placeholder="Your Name">
+
+<input id="quantity" type="number" value="1" min="1">
+
+<div id="addonList"></div>
+
+<select id="payment">
+<option>Cash</option>
+<option>GCash</option>
+<option>Maya</option>
+<option>COD</option>
+</select>
+
+<h4>Total: ₱<span id="total">0</span></h4>
+
+<button onclick="submitOrder()">Submit Order</button>
+<button onclick="closeModal()">Cancel</button>
+
+</div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
