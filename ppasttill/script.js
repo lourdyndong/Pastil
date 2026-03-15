@@ -12,7 +12,7 @@ const DEFAULT_PRODUCTS = [
     name: 'Chicken Pastil with Egg',
     price: 45,
     available: true,
-    image: 'images/pastil-egg.jpg',
+    image: 'images/egg.jpg',
     emoji: '🍱'
   },
   {
@@ -20,7 +20,7 @@ const DEFAULT_PRODUCTS = [
     name: 'Chicken Pastil Skinless',
     price: 45,
     available: true,
-    image: 'images/pastil-skinless.jpg',
+    image: 'images/skinless.jpg',
     emoji: '🍱'
   },
   {
@@ -28,7 +28,7 @@ const DEFAULT_PRODUCTS = [
     name: 'Chicken Pastil Spam',
     price: 50,
     available: true,
-    image: 'images/pastil-spam.jpg',
+    image: 'images/spam.jpg',
     emoji: '🍱'
   },
   {
@@ -36,7 +36,7 @@ const DEFAULT_PRODUCTS = [
     name: 'Chicken Pastil Canton',
     price: 55,
     available: true,
-    image: 'images/pastil-canton.jpg',
+    image: 'images/canton.jpg',
     emoji: '🍱'
   },
   {
