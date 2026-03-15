@@ -1,45 +1,271 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Admin - Pastilan ni Emik</title>
-<link rel="stylesheet" href="style.css">
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — Pastilan ni Emik ⚙️</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Admin-page-specific overrides ── */
+    body { background: #F0EBE3; }
 
+    .admin-page-hero {
+      background: linear-gradient(135deg, var(--brown) 0%, var(--brown2) 60%, #A0532A 100%);
+      padding: 32px 28px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .admin-page-hero-left { display: flex; align-items: center; gap: 16px; }
+    .admin-page-icon {
+      width: 54px; height: 54px; background: var(--yellow);
+      border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; flex-shrink: 0;
+    }
+    .admin-page-title { font-family: var(--font-display); font-size: 1.7rem; color: var(--white); letter-spacing: .5px; line-height: 1.1; }
+    .admin-page-sub   { color: rgba(255,255,255,.65); font-size: .82rem; font-weight: 600; margin-top: 3px; }
+    .admin-back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 20px; border-radius: var(--r-pill);
+      background: rgba(255,255,255,.15); border: 1.5px solid rgba(255,255,255,.25);
+      color: var(--white); font-size: .88rem; font-weight: 700;
+      transition: all .2s; text-decoration: none;
+    }
+    .admin-back-btn:hover { background: rgba(255,255,255,.25); border-color: var(--yellow); color: var(--yellow); }
+
+    /* Stats bar */
+    .admin-stats {
+      display: flex; gap: 0;
+      background: var(--white);
+      border-bottom: 2px solid var(--gray200);
+    }
+    .admin-stat-item {
+      flex: 1; padding: 16px 20px; text-align: center;
+      border-right: 1px solid var(--gray200);
+    }
+    .admin-stat-item:last-child { border-right: none; }
+    .admin-stat-num { font-family: var(--font-display); font-size: 1.8rem; color: var(--orange); line-height: 1; }
+    .admin-stat-label { font-size: .75rem; font-weight: 700; color: var(--gray600); margin-top: 3px; text-transform: uppercase; letter-spacing: .5px; }
+
+    /* Tab bar lives below hero */
+    .admin-tabs { top: 0; }
+
+    /* Wider panels on admin page */
+    .admin-panel { max-width: 1000px; }
+  </style>
+</head>
 <body>
 
-<header>
-<h1>ADMIN PANEL</h1>
-<a href="index.html">Back to Menu</a>
-</header>
+  <!-- ═══════════════════════════════════════════════════
+       ADMIN HERO HEADER
+  ═══════════════════════════════════════════════════ -->
+  <div class="admin-page-hero">
+    <div class="admin-page-hero-left">
+      <div class="admin-page-icon">⚙️</div>
+      <div>
+        <div class="admin-page-title">Admin Panel</div>
+        <div class="admin-page-sub">PASTILAN NI EMIK · Manage your store</div>
+      </div>
+    </div>
+    <a href="index.html" class="admin-back-btn">← Back to Store</a>
+  </div>
 
-<h2>Add Product</h2>
+  <!-- Stats Bar -->
+  <div class="admin-stats" id="adminStats">
+    <div class="admin-stat-item">
+      <div class="admin-stat-num" id="statProducts">0</div>
+      <div class="admin-stat-label">Products</div>
+    </div>
+    <div class="admin-stat-item">
+      <div class="admin-stat-num" id="statAddons">0</div>
+      <div class="admin-stat-label">Add-ons</div>
+    </div>
+    <div class="admin-stat-item">
+      <div class="admin-stat-num" id="statOrders">0</div>
+      <div class="admin-stat-label">Orders</div>
+    </div>
+    <div class="admin-stat-item">
+      <div class="admin-stat-num" id="statPending">0</div>
+      <div class="admin-stat-label">Pending</div>
+    </div>
+  </div>
 
-<input id="pname" placeholder="Product name">
-<input id="pprice" placeholder="Price" type="number">
-<input id="pimage" type="file">
+  <!-- ═══════════════════════════════════════════════════
+       ADMIN TABS
+  ═══════════════════════════════════════════════════ -->
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="switchAdminTab('products', this)">🛒 Products</button>
+    <button class="admin-tab" onclick="switchAdminTab('addons', this)">🧂 Add-ons</button>
+    <button class="admin-tab" onclick="switchAdminTab('orders', this)">📦 Orders</button>
+  </div>
 
-<button onclick="addProduct()">Add Product</button>
+  <!-- ═══════════════════════════════════════════════════
+       PRODUCTS PANEL
+  ═══════════════════════════════════════════════════ -->
+  <div id="admin-products" class="admin-panel active">
+    <div class="admin-toolbar">
+      <h3>All Products</h3>
+      <button class="btn-primary" onclick="openProductModal()">+ Add Product</button>
+    </div>
+    <div class="admin-product-list" id="adminProductList"></div>
+  </div>
 
-<h2>Add Side Dish / Add-on</h2>
+  <!-- ═══════════════════════════════════════════════════
+       ADD-ONS PANEL
+  ═══════════════════════════════════════════════════ -->
+  <div id="admin-addons" class="admin-panel">
+    <div class="admin-toolbar">
+      <h3>Add-ons / Side Dishes</h3>
+      <button class="btn-primary" onclick="openAddonModal()">+ Add Add-on</button>
+    </div>
+    <p class="admin-note">💡 Add-ons are shared across all products. Customers can mix and choose any combination when ordering.</p>
+    <div class="admin-addons-list" id="adminAddonsList"></div>
+  </div>
 
-<select id="addonProduct"></select>
+  <!-- ═══════════════════════════════════════════════════
+       ORDERS PANEL
+  ═══════════════════════════════════════════════════ -->
+  <div id="admin-orders" class="admin-panel">
+    <div class="admin-toolbar">
+      <h3>Customer Orders</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <select class="form-control" id="orderFilterSelect" onchange="renderAdminOrders()" style="width:auto;padding:8px 30px 8px 12px;">
+          <option value="all">All Statuses</option>
+          <option value="Pending">⏳ Pending</option>
+          <option value="Completed">✅ Completed</option>
+          <option value="Cancelled">❌ Cancelled</option>
+        </select>
+        <button class="btn-danger" onclick="clearAllOrders()">🗑️ Clear All</button>
+      </div>
+    </div>
+    <div id="adminOrdersList"></div>
+  </div>
 
-<input id="addonName" placeholder="Add-on name">
+  <!-- ═══════════════════════════════════════════════════
+       PRODUCT MODAL
+  ═══════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="productModal" onclick="handleOverlayClick(event,'productModal')">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h3 id="productModalTitle">Add Product</h3>
+        <button class="modal-close" onclick="closeModal('productModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editProductId" />
 
-<input id="addonPrice" placeholder="Price" type="number">
+        <div class="form-group">
+          <label class="form-label">Product Name <span class="req">*</span></label>
+          <input type="text" id="pName" class="form-control" placeholder="e.g. Pork Pastil" maxlength="60" />
+        </div>
 
-<button onclick="addAddon()">Add Add-on</button>
+        <div class="form-group">
+          <label class="form-label">Price (₱) <span class="req">*</span></label>
+          <input type="number" id="pPrice" class="form-control" placeholder="e.g. 45" min="1" max="9999" />
+        </div>
 
-<h2>Products</h2>
+        <div class="form-group">
+          <label class="form-label">Availability</label>
+          <select id="pAvail" class="form-control">
+            <option value="true">✅ Available</option>
+            <option value="false">❌ Unavailable (Sold Out)</option>
+          </select>
+        </div>
 
-<div id="products"></div>
+        <div class="form-group">
+          <label class="form-label">Product Image</label>
+          <div class="img-input-tabs">
+            <button type="button" class="img-tab active" onclick="switchImgTab('upload',this)">📁 Upload File</button>
+            <button type="button" class="img-tab" onclick="switchImgTab('url',this)">🔗 Image URL</button>
+          </div>
 
-<h2>Orders</h2>
+          <div id="imgUploadArea">
+            <input type="file" id="pImgFile" accept="image/*" onchange="handleImageUpload(event)" style="display:none" />
+            <div class="img-upload-btn" onclick="document.getElementById('pImgFile').click()">
+              <span>📷</span>
+              <p>Click to upload image</p>
+              <small>JPG, PNG, GIF, WEBP</small>
+            </div>
+          </div>
 
-<div id="orders"></div>
+          <div id="imgUrlArea" style="display:none">
+            <input type="url" id="pImgUrl" class="form-control" placeholder="https://example.com/image.jpg" oninput="previewImgUrl()" />
+          </div>
 
-<script src="script.js"></script>
+          <div id="imgPreviewWrap" class="img-preview-wrap" style="display:none">
+            <img id="imgPreview" src="" alt="Preview" />
+            <button type="button" class="img-remove-btn" onclick="removeImagePreview()">✕ Remove</button>
+          </div>
+        </div>
 
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('productModal')">Cancel</button>
+          <button type="button" class="btn-primary" onclick="saveProduct()">💾 Save Product</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       ADD-ON MODAL
+  ═══════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="addonModal" onclick="handleOverlayClick(event,'addonModal')">
+    <div class="modal modal-sm" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h3 id="addonModalTitle">Add Add-on</h3>
+        <button class="modal-close" onclick="closeModal('addonModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editAddonId" />
+
+        <div class="form-group">
+          <label class="form-label">Add-on Name <span class="req">*</span></label>
+          <input type="text" id="addonName" class="form-control" placeholder="e.g. Extra Rice" maxlength="40" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Price (₱) <span class="req">*</span></label>
+          <input type="number" id="addonPrice" class="form-control" placeholder="e.g. 10" min="0" max="999" />
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('addonModal')">Cancel</button>
+          <button type="button" class="btn-primary" onclick="saveAddon()">💾 Save Add-on</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════
+       DELETE CONFIRM MODAL
+  ═══════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="confirmModal" onclick="handleOverlayClick(event,'confirmModal')">
+    <div class="modal modal-sm" role="dialog" aria-modal="true">
+      <div class="modal-header" style="background:linear-gradient(135deg,#991B1B,#E63325)">
+        <h3>⚠️ Confirm Delete</h3>
+        <button class="modal-close" onclick="closeModal('confirmModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMsg" style="font-size:.95rem;font-weight:600;color:var(--brown);margin-bottom:20px;line-height:1.6;"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('confirmModal')">Cancel</button>
+          <button type="button" class="btn-danger" id="confirmOkBtn">Yes, Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+  <footer class="footer">
+    <strong>PASTILAN NI EMIK</strong> &nbsp;·&nbsp; Admin Panel &nbsp;·&nbsp;
+    All data saved in <code style="background:rgba(255,255,255,.1);padding:1px 6px;border-radius:4px;font-size:.8rem;">localStorage</code>
+    &nbsp;·&nbsp; © <span id="footerYear"></span>
+  </footer>
+
+  <script src="admin.js"></script>
 </body>
 </html>
