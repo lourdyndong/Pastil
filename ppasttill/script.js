@@ -51,9 +51,9 @@ const DEFAULT_PRODUCTS = [
 
 const DEFAULT_ADDONS = [
   { id: 'a1', name: 'Extra Rice', price: 10 },
-  { id: 'a2', name: 'Egg', price: 15 },
-  { id: 'a3', name: 'Skinless', price: 15 },
-  { id: 'a4', name: 'Spam', price: 20 },
+  { id: 'a2', name: 'Egg', price: 20 },
+  { id: 'a3', name: 'Skinless', price: 20 },
+  { id: 'a4', name: 'Spam', price: 25 },
   { id: 'a5', name: 'Canton', price: 25 }
 ];
 
